@@ -31,6 +31,30 @@ enum FinanceTheme {
                               dark: UIColor.black.withAlphaComponent(0.22))
 }
 
+enum FinanceSpacing {
+    static let xxSmall: CGFloat = 4
+    static let xSmall: CGFloat = 8
+    static let small: CGFloat = 10
+    static let medium: CGFloat = 12
+    static let regular: CGFloat = 16
+    static let large: CGFloat = 20
+    static let xLarge: CGFloat = 24
+    static let xxLarge: CGFloat = 32
+
+    static let screenHorizontal: CGFloat = 20
+    static let screenVertical: CGFloat = 16
+    static let sectionGap: CGFloat = 20
+    static let cardGap: CGFloat = 16
+    static let rowGap: CGFloat = 14
+}
+
+enum FinanceRadius {
+    static let chip: CGFloat = 12
+    static let medium: CGFloat = 20
+    static let large: CGFloat = 22
+    static let xLarge: CGFloat = 28
+}
+
 struct FinanceSurface<Content: View>: View {
     let padding: CGFloat
     @ViewBuilder var content: Content
@@ -41,17 +65,17 @@ struct FinanceSurface<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: FinanceSpacing.regular) {
             content
         }
         .padding(padding)
         .background(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
+            RoundedRectangle(cornerRadius: FinanceRadius.xLarge, style: .continuous)
                 .fill(FinanceTheme.card)
-                .shadow(color: FinanceTheme.shadow, radius: 16, y: 8)
+                .shadow(color: FinanceTheme.shadow, radius: FinanceSpacing.regular, y: FinanceSpacing.xSmall)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
+            RoundedRectangle(cornerRadius: FinanceRadius.xLarge, style: .continuous)
                 .stroke(FinanceTheme.stroke, lineWidth: 1)
         )
     }
@@ -64,7 +88,7 @@ struct FinancePillButtonStyle: ButtonStyle {
         configuration.label
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(filled ? Color.white : FinanceTheme.textPrimary)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, FinanceSpacing.regular)
             .padding(.vertical, 11)
             .background(
                 Capsule(style: .continuous)
@@ -83,8 +107,8 @@ struct FinanceChip: View {
         Label(title, systemImage: systemImage)
             .font(.caption.weight(.semibold))
             .foregroundStyle(filled ? Color.white : FinanceTheme.textPrimary)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.horizontal, FinanceSpacing.medium)
+            .padding(.vertical, FinanceSpacing.xSmall)
             .background(
                 Capsule(style: .continuous)
                     .fill(filled ? FinanceTheme.accent : FinanceTheme.secondaryCard)

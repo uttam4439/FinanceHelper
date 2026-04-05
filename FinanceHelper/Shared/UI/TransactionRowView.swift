@@ -16,9 +16,9 @@ struct TransactionRowView: View {
     }
 
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: FinanceSpacing.rowGap) {
             ZStack {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                RoundedRectangle(cornerRadius: FinanceRadius.chip, style: .continuous)
                     .fill(FinanceTheme.secondaryCard)
                     .frame(width: 44, height: 44)
 
@@ -26,7 +26,7 @@ struct TransactionRowView: View {
                     .foregroundStyle(transaction.category.color)
             }
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: FinanceSpacing.xxSmall) {
                 Text(transaction.category.title)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(FinanceTheme.textPrimary)
@@ -39,7 +39,7 @@ struct TransactionRowView: View {
 
             Spacer()
 
-            VStack(alignment: .trailing, spacing: 4) {
+            VStack(alignment: .trailing, spacing: FinanceSpacing.xxSmall) {
                 Text(signedAmount)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(transaction.kind == .income ? FinanceTheme.success : FinanceTheme.textPrimary)

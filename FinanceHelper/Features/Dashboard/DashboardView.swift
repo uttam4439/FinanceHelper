@@ -38,7 +38,7 @@ struct DashboardView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: FinanceSpacing.sectionGap) {
                     heroSection
                     totalsStrip
                     weeklyTrendSection
@@ -47,8 +47,8 @@ struct DashboardView: View {
 
                     recentTransactionsSection
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                .padding(.horizontal, FinanceSpacing.screenHorizontal)
+                .padding(.vertical, FinanceSpacing.screenVertical)
             }
             .background(FinanceTheme.background.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
@@ -81,7 +81,7 @@ struct DashboardView: View {
                     .font(.headline)
                     .foregroundStyle(FinanceTheme.textSecondary)
 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: FinanceSpacing.xSmall) {
                     Text("Total balance")
                         .font(.caption)
                         .foregroundStyle(FinanceTheme.textSecondary)
@@ -91,7 +91,7 @@ struct DashboardView: View {
                         .foregroundStyle(FinanceTheme.textPrimary)
                 }
 
-                HStack(spacing: 12) {
+                HStack(spacing: FinanceSpacing.medium) {
                     SummaryCardView(
                         title: "Expenses",
                         value: CurrencyFormatting.currencyString(summary.expenseTotal),
@@ -115,7 +115,7 @@ struct DashboardView: View {
     }
 
     private var totalsStrip: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: FinanceSpacing.rowGap) {
             SummaryCardView(
                 title: "Saved",
                 value: CurrencyFormatting.currencyString(summary.savedThisMonth),
@@ -153,8 +153,8 @@ struct DashboardView: View {
                         x: .value("Day", item.label),
                         y: .value("Amount", item.amount)
                     )
-                    .foregroundStyle(item.isAccent ? FinanceTheme.accent : FinanceTheme.accentSoft)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .foregroundStyle(item.isAccent ? FinanceTheme.accent : FinanceTheme.accent.opacity(0.45))
+                    .clipShape(RoundedRectangle(cornerRadius: FinanceSpacing.xSmall, style: .continuous))
                 }
                 .chartYAxis(.hidden)
                 .chartXAxis {
@@ -174,13 +174,13 @@ struct DashboardView: View {
             subtitle: currentGoal == nil ? "Set a target to stay motivated this month." : "Track your progress against the target."
         ) {
             if let goal = currentGoal {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: FinanceSpacing.rowGap) {
                     ProgressView(value: summary.goalProgress)
                         .progressViewStyle(.linear)
                         .tint(FinanceTheme.accent)
 
                     HStack {
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: FinanceSpacing.xxSmall) {
                             Text("Target")
                                 .font(.caption)
                                 .foregroundStyle(FinanceTheme.textSecondary)
@@ -191,7 +191,7 @@ struct DashboardView: View {
 
                         Spacer()
 
-                        VStack(alignment: .trailing, spacing: 4) {
+                        VStack(alignment: .trailing, spacing: FinanceSpacing.xxSmall) {
                             Text(summary.remainingToGoal > 0 ? "Remaining" : "Status")
                                 .font(.caption)
                                 .foregroundStyle(FinanceTheme.textSecondary)
@@ -259,10 +259,8 @@ struct DashboardView: View {
         return (0..<6).reversed().compactMap { offset in
             guard let date = calendar.date(byAdding: .day, value: -offset, to: .now) else { return nil }
             let total = transactions
-                .filter { calendar.isDate($0.date, inSameDayAs: date) }
-                .reduce(0) { partial, item in
-                    partial + (item.kind == .income ? item.amount : item.amount)
-                }
+                .filter { calendar.isDate($0.date, inSameDayAs: date) && $0.kind == .expense }
+                .reduce(0) { partial, item in partial + item.amount }
 
             return WeeklyAmount(
                 label: formatter.string(from: date),

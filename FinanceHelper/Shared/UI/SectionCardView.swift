@@ -24,8 +24,8 @@ struct SectionCardView<Content: View>: View {
 
     var body: some View {
         FinanceSurface {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: FinanceSpacing.regular) {
+                VStack(alignment: .leading, spacing: FinanceSpacing.xxSmall) {
                     Text(title)
                         .font(.title3.weight(.bold))
                         .foregroundStyle(FinanceTheme.textPrimary)

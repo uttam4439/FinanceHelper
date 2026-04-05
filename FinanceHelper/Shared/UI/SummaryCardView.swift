@@ -16,7 +16,7 @@ struct SummaryCardView: View {
     var filled = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: FinanceSpacing.small) {
             Label(title, systemImage: systemImage)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(filled ? Color.white.opacity(0.9) : FinanceTheme.textSecondary)
@@ -31,9 +31,9 @@ struct SummaryCardView: View {
                 .foregroundStyle(filled ? Color.white.opacity(0.8) : FinanceTheme.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
+        .padding(FinanceSpacing.regular)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: FinanceRadius.medium, style: .continuous)
                 .fill(filled ? tint : tint.opacity(0.12))
         )
     }

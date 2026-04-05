@@ -15,6 +15,8 @@ struct InsightsView: View {
 
     init() {}
 
+    @State private var selectedMonth: String?
+
     private var snapshot: InsightsSnapshot {
         InsightsCalculator.makeSnapshot(transactions: transactions)
     }
@@ -28,15 +30,15 @@ struct InsightsView: View {
                         message: "Add a few transactions and this screen will highlight your spending patterns.",
                         systemImage: "chart.bar.xaxis"
                     )
-                    .padding(20)
+                    .padding(FinanceSpacing.large)
                 } else {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: FinanceSpacing.sectionGap) {
                         metricCards
                         monthlyTrendCard
                         splitCard
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
+                    .padding(.horizontal, FinanceSpacing.screenHorizontal)
+                    .padding(.vertical, FinanceSpacing.screenVertical)
                 }
             }
             .background(FinanceTheme.background.ignoresSafeArea())
@@ -46,7 +48,7 @@ struct InsightsView: View {
     }
 
     private var metricCards: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: FinanceSpacing.cardGap) {
             categoryDonutCard
 
             SectionCardView(
@@ -117,9 +119,9 @@ struct InsightsView: View {
                     }
                     .frame(width: 150, height: 150)
 
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: FinanceSpacing.small) {
                         ForEach(Array(snapshot.categoryBreakdown.prefix(4))) { item in
-                            HStack(spacing: 8) {
+                            HStack(spacing: FinanceSpacing.xSmall) {
                                 Circle()
                                     .fill(item.category.color)
                                     .frame(width: 8, height: 8)
@@ -141,20 +143,49 @@ struct InsightsView: View {
     private var monthlyTrendCard: some View {
         SectionCardView(
             title: "Monthly Trend",
-            subtitle: "Last six months of expenses"
+            subtitle: "Last six months of expenses (line)"
         ) {
             if snapshot.monthlySeries.allSatisfy({ $0.amount == 0 }) {
                 Text("Add more expense entries to unlock a stronger monthly trend.")
                     .foregroundStyle(FinanceTheme.textSecondary)
             } else {
                 Chart(snapshot.monthlySeries) { point in
-                    BarMark(
+                    AreaMark(
                         x: .value("Month", point.monthLabel),
                         y: .value("Spent", point.amount)
                     )
-                    .foregroundStyle(FinanceTheme.accent.gradient)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .foregroundStyle(FinanceTheme.accent.opacity(0.25))
+
+                    LineMark(
+                        x: .value("Month", point.monthLabel),
+                        y: .value("Spent", point.amount)
+                    )
+                    .interpolationMethod(.catmullRom)
+                    .lineStyle(.init(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                    .foregroundStyle(FinanceTheme.accent)
+
+                    PointMark(
+                        x: .value("Month", point.monthLabel),
+                        y: .value("Spent", point.amount)
+                    )
+                    .symbolSize(50)
+                    .foregroundStyle(FinanceTheme.accent)
+                    .opacity(selectedMonth == nil || selectedMonth == point.monthLabel ? 1 : 0.35)
+                    .annotation(position: .top) {
+                        if selectedMonth == point.monthLabel {
+                            Text(CurrencyFormatting.currencyString(point.amount))
+                                .font(.caption.weight(.semibold))
+                                .padding(.horizontal, FinanceSpacing.medium)
+                                .padding(.vertical, FinanceSpacing.xSmall)
+                                .background(FinanceTheme.card, in: Capsule(style: .continuous))
+                                .shadow(color: FinanceTheme.shadow, radius: FinanceSpacing.small, y: FinanceSpacing.xxSmall)
+                        }
+                    }
                 }
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
+                .chartXSelection(value: $selectedMonth)
                 .frame(height: 220)
             }
         }
@@ -181,7 +212,7 @@ struct InsightsView: View {
 
                 HStack {
                     ForEach(snapshot.incomeExpenseSplit) { item in
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: FinanceSpacing.xxSmall) {
                             Text(item.label)
                                 .font(.caption)
                                 .foregroundStyle(FinanceTheme.textSecondary)
@@ -197,14 +228,14 @@ struct InsightsView: View {
     }
 
     private func insightMetricRow(title: String, subtitle: String, systemImage: String, tint: Color) -> some View {
-        HStack(spacing: 14) {
+        HStack(spacing: FinanceSpacing.rowGap) {
             Image(systemName: systemImage)
                 .font(.headline)
                 .foregroundStyle(tint)
                 .frame(width: 40, height: 40)
-                .background(FinanceTheme.secondaryCard, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .background(FinanceTheme.secondaryCard, in: RoundedRectangle(cornerRadius: FinanceRadius.chip, style: .continuous))
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: FinanceSpacing.xxSmall) {
                 Text(title)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(FinanceTheme.textPrimary)

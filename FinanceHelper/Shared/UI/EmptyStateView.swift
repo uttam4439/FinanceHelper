@@ -15,14 +15,14 @@ struct EmptyStateView: View {
     var action: (() -> Void)?
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: FinanceSpacing.regular) {
             Image(systemName: systemImage)
                 .font(.system(size: 40))
                 .foregroundStyle(FinanceTheme.accent)
                 .frame(width: 72, height: 72)
-                .background(FinanceTheme.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .background(FinanceTheme.accentSoft, in: RoundedRectangle(cornerRadius: FinanceRadius.large, style: .continuous))
 
-            VStack(spacing: 8) {
+            VStack(spacing: FinanceSpacing.xSmall) {
                 Text(title)
                     .font(.headline.weight(.bold))
                     .foregroundStyle(FinanceTheme.textPrimary)
@@ -39,7 +39,7 @@ struct EmptyStateView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 32)
-        .padding(.horizontal, 20)
+        .padding(.vertical, FinanceSpacing.xxLarge)
+        .padding(.horizontal, FinanceSpacing.large)
     }
 }

@@ -124,12 +124,12 @@ struct TransactionsView: View {
     }
 
     private var filterHeader: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: FinanceSpacing.cardGap) {
             if !filteredTransactions.isEmpty {
                 spendingHeaderChart
             }
 
-            HStack(spacing: 10) {
+            HStack(spacing: FinanceSpacing.small) {
                 ForEach(KindFilter.allCases) { filter in
                     Button {
                         selectedKindFilter = filter
@@ -182,13 +182,13 @@ struct TransactionsView: View {
             actionTitle: transactions.isEmpty ? "Add Transaction" : "Show All Transactions",
             action: transactions.isEmpty ? onAddTransaction : resetFiltersAndSearch
         )
-        .padding(.horizontal, 20)
+        .padding(.horizontal, FinanceSpacing.screenHorizontal)
     }
 
     private var transactionsList: some View {
         List {
             filterHeader
-                .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
+                .listRowInsets(EdgeInsets(top: FinanceSpacing.regular, leading: FinanceSpacing.screenHorizontal, bottom: FinanceSpacing.regular, trailing: FinanceSpacing.screenHorizontal))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
 
@@ -197,6 +197,7 @@ struct TransactionsView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .listSectionSpacing(.custom(FinanceSpacing.sectionGap))
         .scrollContentBackground(.hidden)
     }
 
@@ -213,10 +214,10 @@ struct TransactionsView: View {
     }
 
     private func transactionRow(for transaction: TransactionRecord) -> some View {
-        FinanceSurface(padding: 16) {
+        FinanceSurface(padding: FinanceSpacing.regular) {
             TransactionRowView(transaction: transaction)
         }
-        .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
+        .listRowInsets(EdgeInsets(top: FinanceSpacing.regular, leading: FinanceSpacing.screenHorizontal, bottom: FinanceSpacing.regular, trailing: FinanceSpacing.screenHorizontal))
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
         .contentShape(Rectangle())
@@ -237,7 +238,7 @@ struct TransactionsView: View {
 
     private var spendingHeaderChart: some View {
         FinanceSurface {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: FinanceSpacing.rowGap) {
                 Text("April 1 - April 30")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(FinanceTheme.textSecondary)
@@ -246,7 +247,7 @@ struct TransactionsView: View {
                     CircleChartView(expenseTotal: expenseTotal, incomeTotal: incomeTotal)
                         .frame(width: 138, height: 138)
 
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: FinanceSpacing.small) {
                         metricLegend(title: "Expenses", value: expenseTotal, color: FinanceTheme.accent)
                         metricLegend(title: "Income", value: incomeTotal, color: FinanceTheme.success)
 
@@ -280,7 +281,7 @@ struct TransactionsView: View {
     }
 
     private func metricLegend(title: String, value: Double, color: Color) -> some View {
-        HStack(spacing: 8) {
+        HStack(spacing: FinanceSpacing.xSmall) {
             Circle()
                 .fill(color)
                 .frame(width: 8, height: 8)
@@ -327,7 +328,7 @@ private struct CircleChartView: View {
                 .stroke(FinanceTheme.success.opacity(incomeTotal > 0 ? 0.9 : 0), style: StrokeStyle(lineWidth: 22, lineCap: .round))
                 .rotationEffect(.degrees(-90))
 
-            VStack(spacing: 4) {
+            VStack(spacing: FinanceSpacing.xxSmall) {
                 Text("Flow")
                     .font(.caption)
                     .foregroundStyle(FinanceTheme.textSecondary)
