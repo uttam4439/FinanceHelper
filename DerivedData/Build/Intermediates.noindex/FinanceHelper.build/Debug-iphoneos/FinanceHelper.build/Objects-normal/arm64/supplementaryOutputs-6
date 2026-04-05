@@ -1,0 +1,23 @@
+{
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Shared/Services/InsightsCalculator.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/InsightsCalculator.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/InsightsCalculator.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/InsightsCalculator.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/InsightsCalculator.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/InsightsCalculator.swiftdeps"
+  },
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Shared/Services/SampleDataSeeder.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SampleDataSeeder.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SampleDataSeeder.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SampleDataSeeder.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SampleDataSeeder.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SampleDataSeeder.swiftdeps"
+  },
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Shared/Services/TransactionFormValidator.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionFormValidator.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionFormValidator.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionFormValidator.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionFormValidator.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionFormValidator.swiftdeps"
+  }
+}

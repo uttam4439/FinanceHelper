@@ -1,0 +1,23 @@
+{
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Shared/UI/EmptyStateView.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/EmptyStateView.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/EmptyStateView.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/EmptyStateView.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/EmptyStateView.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/EmptyStateView.swiftdeps"
+  },
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Shared/UI/SectionCardView.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SectionCardView.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SectionCardView.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SectionCardView.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SectionCardView.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SectionCardView.swiftdeps"
+  },
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Shared/UI/SummaryCardView.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SummaryCardView.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SummaryCardView.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SummaryCardView.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SummaryCardView.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/SummaryCardView.swiftdeps"
+  }
+}

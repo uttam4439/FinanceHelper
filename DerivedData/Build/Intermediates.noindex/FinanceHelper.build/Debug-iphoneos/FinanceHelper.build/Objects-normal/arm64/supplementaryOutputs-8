@@ -1,0 +1,23 @@
+{
+  "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps"
+  },
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/FinanceHelperApp.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/FinanceHelperApp.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/FinanceHelperApp.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/FinanceHelperApp.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/FinanceHelperApp.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/FinanceHelperApp.swiftdeps"
+  },
+  "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Shared/UI/TransactionRowView.swift" : {
+    "const-values" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionRowView.swiftconstvalues",
+    "dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionRowView.d",
+    "diagnostics" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionRowView.dia",
+    "object" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionRowView.o",
+    "swift-dependencies" : "/Users/uttam4439/Documents/FinanceHelper/DerivedData/Build/Intermediates.noindex/FinanceHelper.build/Debug-iphoneos/FinanceHelper.build/Objects-normal/arm64/TransactionRowView.swiftdeps"
+  }
+}

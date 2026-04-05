@@ -1,0 +1,72 @@
+{
+  "source": "/Users/uttam4439/Documents/FinanceHelper/FinanceHelper/Features/Goals/SavingsGoalEditorView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "New Goal",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 49
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit Goal",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 49
+        }
+      },
+      {
+        "comment": "",
+        "key": "Target",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 36
+        }
+      },
+      {
+        "comment": "",
+        "key": "Amount",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 37
+        }
+      },
+      {
+        "comment": "",
+        "key": "Carry unfinished goal into next month",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 40
+        }
+      },
+      {
+        "comment": "",
+        "key": "This goal is used to show savings progress on the dashboard for the current month.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 44
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 57
+        }
+      }
+    ]
+  },
+  "version": 1
+}

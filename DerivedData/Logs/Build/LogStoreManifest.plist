@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>logFormatVersion</key>
+	<integer>12</integer>
+	<key>logs</key>
+	<dict>
+		<key>2447BEF3-4DDB-47D5-9385-B61DE2CDC2DC</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>2447BEF3-4DDB-47D5-9385-B61DE2CDC2DC.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>E</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>1</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>0</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>FinanceHelper project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>FinanceHelper</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Building project FinanceHelper with scheme FinanceHelper</string>
+			<key>timeStartedRecording</key>
+			<real>797099193.78589702</real>
+			<key>timeStoppedRecording</key>
+			<real>797099213.22221899</real>
+			<key>title</key>
+			<string>Building project FinanceHelper with scheme FinanceHelper</string>
+			<key>uniqueIdentifier</key>
+			<string>2447BEF3-4DDB-47D5-9385-B61DE2CDC2DC</string>
+		</dict>
+		<key>CA2C19EE-79BC-4BC2-93FB-4E9B44503ADD</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>CA2C19EE-79BC-4BC2-93FB-4E9B44503ADD.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>E</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>26</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>0</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>FinanceHelper project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>FinanceHelper</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Building project FinanceHelper with scheme FinanceHelper</string>
+			<key>timeStartedRecording</key>
+			<real>797100776.86380804</real>
+			<key>timeStoppedRecording</key>
+			<real>797100781.56560302</real>
+			<key>title</key>
+			<string>Building project FinanceHelper with scheme FinanceHelper</string>
+			<key>uniqueIdentifier</key>
+			<string>CA2C19EE-79BC-4BC2-93FB-4E9B44503ADD</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
