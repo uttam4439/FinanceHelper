@@ -35,7 +35,9 @@ struct AppRootView: View {
                 }
                 .tag(AppTab.insights)
         }
-        .tint(.blue)
+        .tint(FinanceTheme.accent)
+        .toolbarBackground(FinanceTheme.background, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
         .sheet(isPresented: $showingAddTransaction) {
             NavigationStack {
                 TransactionFormView(mode: .create)

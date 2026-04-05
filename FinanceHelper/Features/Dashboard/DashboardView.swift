@@ -40,59 +40,29 @@ struct DashboardView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     heroSection
-
-                    LazyVGrid(columns: [
-                        GridItem(.flexible(), spacing: 14),
-                        GridItem(.flexible(), spacing: 14),
-                    ], spacing: 14) {
-                        SummaryCardView(
-                            title: "Current Balance",
-                            value: CurrencyFormatting.currencyString(summary.balance),
-                            caption: "All recorded activity",
-                            systemImage: "wallet.bifold.fill",
-                            tint: .blue
-                        )
-
-                        SummaryCardView(
-                            title: "This Month In",
-                            value: CurrencyFormatting.currencyString(summary.incomeTotal),
-                            caption: "Income tracked this month",
-                            systemImage: "arrow.down.circle.fill",
-                            tint: .green
-                        )
-
-                        SummaryCardView(
-                            title: "This Month Out",
-                            value: CurrencyFormatting.currencyString(summary.expenseTotal),
-                            caption: "Spending tracked this month",
-                            systemImage: "arrow.up.circle.fill",
-                            tint: .orange
-                        )
-
-                        SummaryCardView(
-                            title: "Saved So Far",
-                            value: CurrencyFormatting.currencyString(summary.savedThisMonth),
-                            caption: summary.savedThisMonth >= 0 ? "Income minus expenses" : "You are over budget",
-                            systemImage: "chart.line.uptrend.xyaxis.circle.fill",
-                            tint: .purple
-                        )
-                    }
+                    totalsStrip
+                    weeklyTrendSection
 
                     savingsGoalSection
-
-                    spendingChartSection
 
                     recentTransactionsSection
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
             }
-            .background(Color(uiColor: .systemGroupedBackground))
-            .navigationTitle("Dashboard")
+            .background(FinanceTheme.background.ignoresSafeArea())
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Label("MoneyPal", systemImage: "dollarsign.circle.fill")
+                        .font(.headline.weight(.bold))
+                        .foregroundStyle(FinanceTheme.textPrimary)
+                }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: onAddTransaction) {
-                        Label("Add", systemImage: "plus")
+                        Image(systemName: "line.3.horizontal")
+                            .foregroundStyle(FinanceTheme.accent)
                     }
                 }
             }
@@ -105,22 +75,97 @@ struct DashboardView: View {
     }
 
     private var heroSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Your money at a glance")
-                .font(.largeTitle.bold())
+        FinanceSurface {
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Hello!")
+                    .font(.headline)
+                    .foregroundStyle(FinanceTheme.textSecondary)
 
-            Text("Stay aware of where your money is going and how close you are to this month’s goal.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Total balance")
+                        .font(.caption)
+                        .foregroundStyle(FinanceTheme.textSecondary)
 
-            Button(action: onAddTransaction) {
-                Label("Add Transaction", systemImage: "plus.circle.fill")
-                    .frame(maxWidth: .infinity)
+                    Text(CurrencyFormatting.currencyString(summary.balance))
+                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                        .foregroundStyle(FinanceTheme.textPrimary)
+                }
+
+                HStack(spacing: 12) {
+                    SummaryCardView(
+                        title: "Expenses",
+                        value: CurrencyFormatting.currencyString(summary.expenseTotal),
+                        caption: "This month",
+                        systemImage: "basket.fill",
+                        tint: FinanceTheme.accent,
+                        filled: true
+                    )
+
+                    SummaryCardView(
+                        title: "Income",
+                        value: CurrencyFormatting.currencyString(summary.incomeTotal),
+                        caption: "This month",
+                        systemImage: "banknote.fill",
+                        tint: FinanceTheme.secondaryCard
+                    )
+                }
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var totalsStrip: some View {
+        HStack(spacing: 14) {
+            SummaryCardView(
+                title: "Saved",
+                value: CurrencyFormatting.currencyString(summary.savedThisMonth),
+                caption: summary.savedThisMonth >= 0 ? "Income minus spend" : "Needs attention",
+                systemImage: "sparkles",
+                tint: FinanceTheme.accentSoft
+            )
+
+            SummaryCardView(
+                title: "Balance",
+                value: CurrencyFormatting.currencyString(summary.balance),
+                caption: "Across all records",
+                systemImage: "wallet.bifold.fill",
+                tint: Color.white
+            )
+        }
+    }
+
+    private var weeklyTrendSection: some View {
+        SectionCardView(
+            title: "Weekly Activity",
+            subtitle: "A compact view of recent movement"
+        ) {
+            let weeklyData = weeklyAmounts
+
+            if weeklyData.allSatisfy({ $0.amount == 0 }) {
+                EmptyStateView(
+                    title: "No activity yet",
+                    message: "Add a few transactions to unlock your weekly chart.",
+                    systemImage: "chart.bar.fill"
+                )
+            } else {
+                Chart(weeklyData) { item in
+                    BarMark(
+                        x: .value("Day", item.label),
+                        y: .value("Amount", item.amount)
+                    )
+                    .foregroundStyle(item.isAccent ? FinanceTheme.accent : FinanceTheme.accentSoft)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                }
+                .chartYAxis(.hidden)
+                .chartXAxis {
+                    AxisMarks(values: .automatic) {
+                        AxisValueLabel()
+                            .foregroundStyle(FinanceTheme.textSecondary)
+                    }
+                }
+                .frame(height: 190)
+            }
+        }
     }
 
     private var savingsGoalSection: some View {
@@ -132,15 +177,16 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     ProgressView(value: summary.goalProgress)
                         .progressViewStyle(.linear)
-                        .tint(.green)
+                        .tint(FinanceTheme.accent)
 
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Target")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(FinanceTheme.textSecondary)
                             Text(CurrencyFormatting.currencyString(goal.monthlyTarget))
                                 .font(.headline)
+                                .foregroundStyle(FinanceTheme.textPrimary)
                         }
 
                         Spacer()
@@ -148,17 +194,17 @@ struct DashboardView: View {
                         VStack(alignment: .trailing, spacing: 4) {
                             Text(summary.remainingToGoal > 0 ? "Remaining" : "Status")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(FinanceTheme.textSecondary)
                             Text(goalStatusText)
                                 .font(.headline)
-                                .foregroundStyle(summary.remainingToGoal > 0 ? AnyShapeStyle(.primary) : AnyShapeStyle(.green))
+                                .foregroundStyle(summary.remainingToGoal > 0 ? AnyShapeStyle(FinanceTheme.textPrimary) : AnyShapeStyle(FinanceTheme.success))
                         }
                     }
 
                     Button("Edit Goal") {
                         showingGoalSheet = true
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(FinancePillButtonStyle(filled: false))
                 }
             } else {
                 EmptyStateView(
@@ -168,45 +214,6 @@ struct DashboardView: View {
                     actionTitle: "Create Goal",
                     action: { showingGoalSheet = true }
                 )
-            }
-        }
-    }
-
-    private var spendingChartSection: some View {
-        SectionCardView(
-            title: "Spending Breakdown",
-            subtitle: "This month by category"
-        ) {
-            if summary.categoryBreakdown.isEmpty {
-                EmptyStateView(
-                    title: "No expenses yet",
-                    message: "Once you log spending, your category mix will show up here.",
-                    systemImage: "chart.pie"
-                )
-            } else {
-                VStack(spacing: 16) {
-                    Chart(summary.categoryBreakdown) { item in
-                        SectorMark(
-                            angle: .value("Amount", item.total),
-                            innerRadius: .ratio(0.58),
-                            angularInset: 1
-                        )
-                        .foregroundStyle(item.category.color)
-                    }
-                    .frame(height: 220)
-
-                    ForEach(summary.categoryBreakdown.prefix(4)) { item in
-                        HStack {
-                            Label(item.category.title, systemImage: item.category.symbol)
-                                .foregroundStyle(item.category.color)
-
-                            Spacer()
-
-                            Text(CurrencyFormatting.currencyString(item.total))
-                                .fontWeight(.semibold)
-                        }
-                    }
-                }
             }
         }
     }
@@ -243,4 +250,32 @@ struct DashboardView: View {
 
         return CurrencyFormatting.currencyString(summary.remainingToGoal)
     }
+
+    private var weeklyAmounts: [WeeklyAmount] {
+        let calendar = Calendar.current
+        let formatter = DateFormatter()
+        formatter.dateFormat = "E"
+
+        return (0..<6).reversed().compactMap { offset in
+            guard let date = calendar.date(byAdding: .day, value: -offset, to: .now) else { return nil }
+            let total = transactions
+                .filter { calendar.isDate($0.date, inSameDayAs: date) }
+                .reduce(0) { partial, item in
+                    partial + (item.kind == .income ? item.amount : item.amount)
+                }
+
+            return WeeklyAmount(
+                label: formatter.string(from: date),
+                amount: total,
+                isAccent: offset == 0
+            )
+        }
+    }
+}
+
+private struct WeeklyAmount: Identifiable {
+    let id = UUID()
+    let label: String
+    let amount: Double
+    let isAccent: Bool
 }

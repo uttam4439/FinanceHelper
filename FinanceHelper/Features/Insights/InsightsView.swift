@@ -39,13 +39,16 @@ struct InsightsView: View {
                     .padding(.vertical, 16)
                 }
             }
-            .background(Color(uiColor: .systemGroupedBackground))
-            .navigationTitle("Insights")
+            .background(FinanceTheme.background.ignoresSafeArea())
+            .navigationTitle("All Transactions")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 
     private var metricCards: some View {
         VStack(spacing: 16) {
+            categoryDonutCard
+
             SectionCardView(
                 title: "Top Spending Category",
                 subtitle: "Where most of your expenses are going"
@@ -59,7 +62,7 @@ struct InsightsView: View {
                     )
                 } else {
                     Text("Not enough spending data yet.")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(FinanceTheme.textSecondary)
                 }
             }
 
@@ -88,7 +91,48 @@ struct InsightsView: View {
                     )
                 } else {
                     Text("Not enough expense history yet.")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(FinanceTheme.textSecondary)
+                }
+            }
+        }
+    }
+
+    private var categoryDonutCard: some View {
+        SectionCardView(
+            title: "April Overview",
+            subtitle: "Category share"
+        ) {
+            if snapshot.categoryBreakdown.isEmpty {
+                Text("No category data yet.")
+                    .foregroundStyle(FinanceTheme.textSecondary)
+            } else {
+                HStack(spacing: 18) {
+                    Chart(snapshot.categoryBreakdown.prefix(5)) { item in
+                        SectorMark(
+                            angle: .value("Amount", item.total),
+                            innerRadius: .ratio(0.56),
+                            angularInset: 3
+                        )
+                        .foregroundStyle(item.category.color)
+                    }
+                    .frame(width: 150, height: 150)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(Array(snapshot.categoryBreakdown.prefix(4))) { item in
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(item.category.color)
+                                    .frame(width: 8, height: 8)
+                                Text(item.category.title)
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(FinanceTheme.textPrimary)
+                                Spacer()
+                                Text(CurrencyFormatting.currencyString(item.total))
+                                    .font(.caption)
+                                    .foregroundStyle(FinanceTheme.textSecondary)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -101,14 +145,14 @@ struct InsightsView: View {
         ) {
             if snapshot.monthlySeries.allSatisfy({ $0.amount == 0 }) {
                 Text("Add more expense entries to unlock a stronger monthly trend.")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FinanceTheme.textSecondary)
             } else {
                 Chart(snapshot.monthlySeries) { point in
                     BarMark(
                         x: .value("Month", point.monthLabel),
                         y: .value("Spent", point.amount)
                     )
-                    .foregroundStyle(.blue.gradient)
+                    .foregroundStyle(FinanceTheme.accent.gradient)
                     .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
                 .frame(height: 220)
@@ -123,7 +167,7 @@ struct InsightsView: View {
         ) {
             if snapshot.incomeExpenseSplit.allSatisfy({ $0.amount == 0 }) {
                 Text("No totals available yet.")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FinanceTheme.textSecondary)
             } else {
                 Chart(snapshot.incomeExpenseSplit) { item in
                     SectorMark(
@@ -131,7 +175,7 @@ struct InsightsView: View {
                         innerRadius: .ratio(0.56),
                         angularInset: 2
                     )
-                    .foregroundStyle(item.label == "Income" ? .green : .orange)
+                    .foregroundStyle(item.label == "Income" ? FinanceTheme.success : FinanceTheme.accent)
                 }
                 .frame(height: 220)
 
@@ -140,9 +184,10 @@ struct InsightsView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(item.label)
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(FinanceTheme.textSecondary)
                             Text(CurrencyFormatting.currencyString(item.amount))
                                 .font(.headline)
+                                .foregroundStyle(FinanceTheme.textPrimary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -157,14 +202,15 @@ struct InsightsView: View {
                 .font(.headline)
                 .foregroundStyle(tint)
                 .frame(width: 40, height: 40)
-                .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .background(FinanceTheme.secondaryCard, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.body.weight(.semibold))
+                    .foregroundStyle(FinanceTheme.textPrimary)
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FinanceTheme.textSecondary)
             }
 
             Spacer()
@@ -184,6 +230,6 @@ struct InsightsView: View {
     }
 
     private var weeklyChangeTint: Color {
-        snapshot.weekOverWeekDelta > 0 ? .orange : .green
+        snapshot.weekOverWeekDelta > 0 ? FinanceTheme.accent : FinanceTheme.success
     }
 }

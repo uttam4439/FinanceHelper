@@ -79,13 +79,15 @@ struct TransactionsView: View {
     var body: some View {
         NavigationStack {
             contentView
-            .background(Color(uiColor: .systemGroupedBackground))
-            .navigationTitle("Transactions")
+            .background(FinanceTheme.background.ignoresSafeArea())
+            .navigationTitle("All Transactions")
+            .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $searchText, prompt: "Search notes or categories")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: onAddTransaction) {
-                        Label("Add", systemImage: "plus")
+                        Image(systemName: "plus")
+                            .foregroundStyle(FinanceTheme.accent)
                     }
                 }
             }
@@ -122,23 +124,24 @@ struct TransactionsView: View {
     }
 
     private var filterHeader: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Picker("Type", selection: $selectedKindFilter) {
+        VStack(alignment: .leading, spacing: 16) {
+            if !filteredTransactions.isEmpty {
+                spendingHeaderChart
+            }
+
+            HStack(spacing: 10) {
                 ForEach(KindFilter.allCases) { filter in
-                    Text(filter.title).tag(filter)
+                    Button {
+                        selectedKindFilter = filter
+                    } label: {
+                        Text(filter.title)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(FinancePillButtonStyle(filled: selectedKindFilter == filter))
                 }
             }
-            .pickerStyle(.segmented)
 
             HStack {
-                Menu {
-                    ForEach(KindFilter.allCases) { filter in
-                        Button(filter.title) { selectedKindFilter = filter }
-                    }
-                } label: {
-                    filterChip(title: selectedKindFilter.title, systemImage: "line.3.horizontal.decrease.circle")
-                }
-
                 Menu {
                     Button("All Categories") { selectedCategory = nil }
                     Divider()
@@ -176,8 +179,8 @@ struct TransactionsView: View {
                 ? "Add your first transaction to start building your finance history."
                 : "Try changing your filters or search term.",
             systemImage: "tray.fill",
-            actionTitle: transactions.isEmpty ? "Add Transaction" : nil,
-            action: transactions.isEmpty ? onAddTransaction : nil
+            actionTitle: transactions.isEmpty ? "Add Transaction" : "Show All Transactions",
+            action: transactions.isEmpty ? onAddTransaction : resetFiltersAndSearch
         )
         .padding(.horizontal, 20)
     }
@@ -187,12 +190,14 @@ struct TransactionsView: View {
             filterHeader
                 .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
                 .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
 
             ForEach(groupedTransactions, id: \.0) { day, dayTransactions in
                 transactionSection(for: day, transactions: dayTransactions)
             }
         }
         .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
     }
 
     private func transactionSection(for day: Date, transactions dayTransactions: [TransactionRecord]) -> some View {
@@ -202,35 +207,136 @@ struct TransactionsView: View {
             }
         } header: {
             Text(day, format: .dateTime.weekday(.wide).day().month(.abbreviated))
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(FinanceTheme.textSecondary)
         }
     }
 
     private func transactionRow(for transaction: TransactionRecord) -> some View {
-        TransactionRowView(transaction: transaction)
-            .contentShape(Rectangle())
-            .onTapGesture {
+        FinanceSurface(padding: 16) {
+            TransactionRowView(transaction: transaction)
+        }
+        .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            transactionToEdit = transaction
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button("Delete", role: .destructive) {
+                transactionToDelete = transaction
+            }
+
+            Button("Edit") {
                 transactionToEdit = transaction
             }
-            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                Button("Delete", role: .destructive) {
-                    transactionToDelete = transaction
-                }
+            .tint(FinanceTheme.accent)
+        }
+    }
 
-                Button("Edit") {
-                    transactionToEdit = transaction
+    private var spendingHeaderChart: some View {
+        FinanceSurface {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("April 1 - April 30")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(FinanceTheme.textSecondary)
+
+                HStack(spacing: 18) {
+                    CircleChartView(expenseTotal: expenseTotal, incomeTotal: incomeTotal)
+                        .frame(width: 138, height: 138)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        metricLegend(title: "Expenses", value: expenseTotal, color: FinanceTheme.accent)
+                        metricLegend(title: "Income", value: incomeTotal, color: FinanceTheme.success)
+
+                        if let topCategory = topExpenseCategory {
+                            Text("Top: \(topCategory.key.title)")
+                                .font(.caption)
+                                .foregroundStyle(FinanceTheme.textSecondary)
+                        }
+                    }
                 }
-                .tint(.blue)
             }
+        }
+    }
+
+    private var expenseTotal: Double {
+        filteredTransactions.filter { $0.kind == .expense }.reduce(0) { $0 + $1.amount }
+    }
+
+    private var incomeTotal: Double {
+        filteredTransactions.filter { $0.kind == .income }.reduce(0) { $0 + $1.amount }
+    }
+
+    private var topExpenseCategory: (key: TransactionCategory, value: Double)? {
+        let totals = filteredTransactions
+            .filter { $0.kind == .expense }
+            .reduce(into: [TransactionCategory: Double]()) { partial, item in
+                partial[item.category, default: 0] += item.amount
+            }
+
+        return totals.max(by: { $0.value < $1.value })
+    }
+
+    private func metricLegend(title: String, value: Double, color: Color) -> some View {
+        HStack(spacing: 8) {
+            Circle()
+                .fill(color)
+                .frame(width: 8, height: 8)
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(FinanceTheme.textPrimary)
+            Spacer()
+            Text(CurrencyFormatting.currencyString(value))
+                .font(.caption)
+                .foregroundStyle(FinanceTheme.textSecondary)
+        }
     }
 
     private func filterChip(title: String, systemImage: String) -> some View {
-        Label(title, systemImage: systemImage)
-            .font(.subheadline.weight(.semibold))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(
-                Capsule(style: .continuous)
-                    .fill(Color(uiColor: .tertiarySystemFill))
-            )
+        FinanceChip(title: title, systemImage: systemImage)
+    }
+
+    private func resetFiltersAndSearch() {
+        searchText = ""
+        selectedKindFilter = .all
+        selectedCategory = nil
+        selectedDateRange = .thisMonth
+    }
+}
+
+private struct CircleChartView: View {
+    let expenseTotal: Double
+    let incomeTotal: Double
+
+    private var total: Double { max(expenseTotal + incomeTotal, 1) }
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(FinanceTheme.secondaryCard, lineWidth: 22)
+
+            Circle()
+                .trim(from: 0, to: expenseTotal / total)
+                .stroke(FinanceTheme.accent, style: StrokeStyle(lineWidth: 22, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+
+            Circle()
+                .trim(from: expenseTotal / total, to: 1)
+                .stroke(FinanceTheme.success.opacity(incomeTotal > 0 ? 0.9 : 0), style: StrokeStyle(lineWidth: 22, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+
+            VStack(spacing: 4) {
+                Text("Flow")
+                    .font(.caption)
+                    .foregroundStyle(FinanceTheme.textSecondary)
+                Text(CurrencyFormatting.currencyString(expenseTotal + incomeTotal))
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(FinanceTheme.textPrimary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding(6)
     }
 }

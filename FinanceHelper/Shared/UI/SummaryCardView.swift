@@ -13,27 +13,28 @@ struct SummaryCardView: View {
     let caption: String
     let systemImage: String
     let tint: Color
+    var filled = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Label(title, systemImage: systemImage)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(filled ? Color.white.opacity(0.9) : FinanceTheme.textSecondary)
 
             Text(value)
                 .font(.title3.weight(.bold))
-                .foregroundStyle(.primary)
+                .foregroundStyle(filled ? Color.white : FinanceTheme.textPrimary)
                 .minimumScaleFactor(0.8)
 
             Text(caption)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(filled ? Color.white.opacity(0.8) : FinanceTheme.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(tint.opacity(0.12))
+                .fill(filled ? tint : tint.opacity(0.12))
         )
     }
 }

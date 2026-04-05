@@ -18,21 +18,24 @@ struct EmptyStateView: View {
         VStack(spacing: 16) {
             Image(systemName: systemImage)
                 .font(.system(size: 40))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(FinanceTheme.accent)
+                .frame(width: 72, height: 72)
+                .background(FinanceTheme.accentSoft, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
 
             VStack(spacing: 8) {
                 Text(title)
-                    .font(.headline)
+                    .font(.headline.weight(.bold))
+                    .foregroundStyle(FinanceTheme.textPrimary)
 
                 Text(message)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FinanceTheme.textSecondary)
                     .multilineTextAlignment(.center)
             }
 
             if let actionTitle, let action {
                 Button(actionTitle, action: action)
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(FinancePillButtonStyle())
             }
         }
         .frame(maxWidth: .infinity)

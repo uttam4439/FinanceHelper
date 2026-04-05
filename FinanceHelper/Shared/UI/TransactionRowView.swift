@@ -18,9 +18,9 @@ struct TransactionRowView: View {
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
-                Circle()
-                    .fill(transaction.category.color.opacity(0.14))
-                    .frame(width: 42, height: 42)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(FinanceTheme.secondaryCard)
+                    .frame(width: 44, height: 44)
 
                 Image(systemName: transaction.category.symbol)
                     .foregroundStyle(transaction.category.color)
@@ -29,10 +29,11 @@ struct TransactionRowView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(transaction.category.title)
                     .font(.body.weight(.semibold))
+                    .foregroundStyle(FinanceTheme.textPrimary)
 
                 Text(transaction.note.isEmpty ? transaction.kind.title : transaction.note)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FinanceTheme.textSecondary)
                     .lineLimit(1)
             }
 
@@ -41,13 +42,13 @@ struct TransactionRowView: View {
             VStack(alignment: .trailing, spacing: 4) {
                 Text(signedAmount)
                     .font(.body.weight(.semibold))
-                    .foregroundStyle(transaction.kind == .income ? .green : .primary)
+                    .foregroundStyle(transaction.kind == .income ? FinanceTheme.success : FinanceTheme.textPrimary)
 
                 Text(transaction.date, format: .dateTime.day().month(.abbreviated))
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FinanceTheme.textSecondary)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
     }
 }
