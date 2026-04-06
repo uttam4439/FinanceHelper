@@ -42,6 +42,12 @@ FinanceHelper is a native iOS personal finance companion built with SwiftUI and 
 
 - The app starts from a true zero state so the evaluator can see empty-state UX and enter data manually.
 - The architecture keeps calculation logic out of views to make unit testing straightforward.
+- A 2s splash/onboarding screen eases into the main app (`Shared/UI/SplashView.swift`).
+- Loading and error placeholders are available for dashboard, transactions, and insights (`Shared/UI/LoadStateViews.swift`).
+
+## Screenshots
+
+![Transactions](docs/screenshots/transactions.png)
 
 ## Feature Checklist (with file references)
 
