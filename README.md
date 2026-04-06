@@ -47,7 +47,17 @@ FinanceHelper is a native iOS personal finance companion built with SwiftUI and 
 
 ## Screenshots
 
-![Transactions](docs/screenshots/transactions.png)
+| Dashboard | Dashboard (Goal/Recent) |
+| --- | --- |
+| ![Dashboard 1](docs/screenshots/dashboard-1.png) | ![Dashboard 2](docs/screenshots/dashboard-2.png) |
+
+| Transactions | Insights |
+| --- | --- |
+| ![Transactions](docs/screenshots/transactions-1.png) | ![Insights 1](docs/screenshots/insights-1.png) |
+
+| Insights Trend | Markets | Add Transaction |
+| --- | --- | --- |
+| ![Insights 2](docs/screenshots/insights-2.png) | ![Markets](docs/screenshots/markets.png) | ![Transaction Form](docs/screenshots/transaction-form.png) |
 
 ## Feature Checklist (with file references)
 
