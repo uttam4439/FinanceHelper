@@ -42,3 +42,16 @@ FinanceHelper is a native iOS personal finance companion built with SwiftUI and 
 
 - The app starts from a true zero state so the evaluator can see empty-state UX and enter data manually.
 - The architecture keeps calculation logic out of views to make unit testing straightforward.
+
+## Feature Checklist (with file references)
+
+- Home Dashboard with Summary: `FinanceHelper/Features/Dashboard/DashboardView.swift`
+- Visual Elements (charts/trends/breakdowns): bar and donut charts in dashboard; line/area and split charts in `Features/Insights/InsightsView.swift`
+- Transaction Tracking (add/view/edit/delete): list + swipe actions + form in `Features/Transactions/TransactionsView.swift` and `Features/Transactions/TransactionFormView.swift`
+- Transaction Filtering/Search: search bar and type/category/date chips in `Features/Transactions/TransactionsView.swift`
+- Goal/Challenge Feature: monthly savings goal and progress in `Features/Dashboard/DashboardView.swift` and `Features/Goals/SavingsGoalEditorView.swift`
+- Insights Screen: top category, weekly delta, monthly trend, income/expense split, category donut in `Features/Insights/InsightsView.swift`
+- Smooth Navigation Flow: tab bar shell `App/AppRootView.swift`, sheets for add/edit/market/goal
+- Empty/Loading/Error States: `Shared/UI/EmptyStateView.swift`, `Shared/UI/LoadStateViews.swift` used across dashboard, insights, transactions
+- Local Data Persistence: SwiftData models `Shared/Models/TransactionRecord.swift`, `Shared/Models/SavingsGoal.swift`
+- State Management: SwiftUI state + SwiftData queries + repository/calculators (`Shared/Services`)

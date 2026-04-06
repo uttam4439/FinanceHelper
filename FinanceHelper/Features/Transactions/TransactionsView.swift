@@ -1,10 +1,3 @@
-//
-//  TransactionsView.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import SwiftData
 import SwiftUI
 
@@ -45,6 +38,8 @@ struct TransactionsView: View {
     @State private var selectedDateRange: DateRangeFilter = .thisMonth
     @State private var transactionToEdit: TransactionRecord?
     @State private var transactionToDelete: TransactionRecord?
+    @State private var isLoading = false
+    @State private var loadError: String?
 
     init(onAddTransaction: @escaping () -> Void) {
         self.onAddTransaction = onAddTransaction
@@ -78,7 +73,30 @@ struct TransactionsView: View {
 
     var body: some View {
         NavigationStack {
-            contentView
+            ZStack {
+                if let loadError {
+                    ErrorStateView(message: loadError, actionTitle: "Retry") { refreshData() }
+                } else if isLoading {
+                    LoadingStateView(message: "Loading transactions…")
+                } else {
+                    ScrollView {
+                        VStack(spacing: FinanceSpacing.cardGap) {
+                            filterHeader
+                                .padding(.horizontal, FinanceSpacing.screenHorizontal)
+
+                            spendingHeaderChart
+                                .padding(.horizontal, FinanceSpacing.screenHorizontal)
+
+                            if filteredTransactions.isEmpty {
+                                emptyStateView
+                            } else {
+                                transactionsStack
+                            }
+                        }
+                        .padding(.vertical, FinanceSpacing.screenVertical)
+                    }
+                }
+            }
             .background(FinanceTheme.background.ignoresSafeArea())
             .navigationTitle("All Transactions")
             .navigationBarTitleDisplayMode(.automatic)
@@ -125,10 +143,6 @@ struct TransactionsView: View {
 
     private var filterHeader: some View {
         VStack(alignment: .leading, spacing: FinanceSpacing.cardGap) {
-            if !filteredTransactions.isEmpty {
-                spendingHeaderChart
-            }
-
             HStack(spacing: FinanceSpacing.small) {
                 ForEach(KindFilter.allCases) { filter in
                     Button {
@@ -141,7 +155,7 @@ struct TransactionsView: View {
                 }
             }
 
-            HStack {
+            HStack(spacing: FinanceSpacing.small) {
                 Menu {
                     Button("All Categories") { selectedCategory = nil }
                     Divider()
@@ -150,6 +164,7 @@ struct TransactionsView: View {
                     }
                 } label: {
                     filterChip(title: selectedCategory?.title ?? "All Categories", systemImage: "square.grid.2x2")
+                        .frame(maxWidth: .infinity)
                 }
 
                 Menu {
@@ -158,6 +173,7 @@ struct TransactionsView: View {
                     }
                 } label: {
                     filterChip(title: selectedDateRange.title, systemImage: "calendar")
+                        .frame(maxWidth: .infinity)
                 }
             }
         }
@@ -165,11 +181,7 @@ struct TransactionsView: View {
 
     @ViewBuilder
     private var contentView: some View {
-        if filteredTransactions.isEmpty {
-            emptyStateView
-        } else {
-            transactionsList
-        }
+        EmptyView() // content handled in body ScrollView
     }
 
     private var emptyStateView: some View {
@@ -191,48 +203,36 @@ struct TransactionsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 
-    private var transactionsList: some View {
-        List {
-            Section {
-                ForEach(groupedTransactions, id: \.0) { day, dayTransactions in
-                    transactionSection(for: day, transactions: dayTransactions)
+    private var transactionsStack: some View {
+        LazyVStack(alignment: .leading, spacing: FinanceSpacing.cardGap, pinnedViews: []) {
+            ForEach(groupedTransactions, id: \.0) { day, dayTransactions in
+                Text(day, format: .dateTime.weekday(.wide).day().month(.abbreviated))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(FinanceTheme.textSecondary)
+                    .padding(.horizontal, FinanceSpacing.screenHorizontal)
+
+                VStack(spacing: FinanceSpacing.small) {
+                    ForEach(dayTransactions) { transaction in
+                        FinanceSurface(padding: FinanceSpacing.regular) {
+                            TransactionRowView(transaction: transaction)
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture { transactionToEdit = transaction }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button("Delete", role: .destructive) {
+                                transactionToDelete = transaction
+                            }
+
+                            Button("Edit") {
+                                transactionToEdit = transaction
+                            }
+                            .tint(FinanceTheme.accent)
+                        }
+                    }
                 }
-            } header: {
-                filterHeader
-                    .padding(.vertical, FinanceSpacing.small)
+                .padding(.horizontal, FinanceSpacing.screenHorizontal)
             }
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
-        .background(FinanceTheme.background)
-    }
-
-    private func transactionSection(for day: Date, transactions dayTransactions: [TransactionRecord]) -> some View {
-        Section {
-            ForEach(dayTransactions) { transaction in
-                transactionRow(for: transaction)
-            }
-        } header: {
-            Text(day, format: .dateTime.weekday(.wide).day().month(.abbreviated))
-                .font(.subheadline.weight(.bold))
-                .foregroundStyle(FinanceTheme.textSecondary)
-        }
-    }
-
-    private func transactionRow(for transaction: TransactionRecord) -> some View {
-        TransactionRowView(transaction: transaction)
-            .contentShape(Rectangle())
-            .onTapGesture { transactionToEdit = transaction }
-            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                Button("Delete", role: .destructive) {
-                    transactionToDelete = transaction
-                }
-
-                Button("Edit") {
-                    transactionToEdit = transaction
-                }
-                .tint(FinanceTheme.accent)
-            }
     }
 
     private var spendingHeaderChart: some View {
@@ -301,6 +301,13 @@ struct TransactionsView: View {
         selectedKindFilter = .all
         selectedCategory = nil
         selectedDateRange = .thisMonth
+        loadError = nil
+    }
+
+    private func refreshData() {
+        // Hook for future async data; currently instant local data.
+        loadError = nil
+        isLoading = false
     }
 }
 

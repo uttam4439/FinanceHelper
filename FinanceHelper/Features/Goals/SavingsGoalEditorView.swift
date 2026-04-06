@@ -1,10 +1,3 @@
-//
-//  SavingsGoalEditorView.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import SwiftUI
 
 struct SavingsGoalEditorView: View {

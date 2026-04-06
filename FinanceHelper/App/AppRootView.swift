@@ -1,46 +1,55 @@
-//
-//  AppRootView.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import SwiftUI
 
 struct AppRootView: View {
     @State private var selectedTab: AppTab = .dashboard
     @State private var showingAddTransaction = false
+    @State private var showSplash = true
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            DashboardView(
-                onAddTransaction: { showingAddTransaction = true }
-            )
-            .tabItem {
-                Label(AppTab.dashboard.title, systemImage: AppTab.dashboard.symbol)
-            }
-            .tag(AppTab.dashboard)
-
-            TransactionsView(
-                onAddTransaction: { showingAddTransaction = true }
-            )
-            .tabItem {
-                Label(AppTab.transactions.title, systemImage: AppTab.transactions.symbol)
-            }
-            .tag(AppTab.transactions)
-
-            InsightsView()
+        ZStack {
+            TabView(selection: $selectedTab) {
+                DashboardView(
+                    onAddTransaction: { showingAddTransaction = true }
+                )
                 .tabItem {
-                    Label(AppTab.insights.title, systemImage: AppTab.insights.symbol)
+                    Label(AppTab.dashboard.title, systemImage: AppTab.dashboard.symbol)
                 }
-                .tag(AppTab.insights)
+                .tag(AppTab.dashboard)
+
+                TransactionsView(
+                    onAddTransaction: { showingAddTransaction = true }
+                )
+                .tabItem {
+                    Label(AppTab.transactions.title, systemImage: AppTab.transactions.symbol)
+                }
+                .tag(AppTab.transactions)
+
+                InsightsView()
+                    .tabItem {
+                        Label(AppTab.insights.title, systemImage: AppTab.insights.symbol)
+                    }
+                    .tag(AppTab.insights)
+            }
+            .tint(FinanceTheme.accent)
+            .toolbarBackground(FinanceTheme.background, for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .sheet(isPresented: $showingAddTransaction) {
+                NavigationStack {
+                    TransactionFormView(mode: .create)
+                }
+            }
+
+            if showSplash {
+                SplashView()
+                    .transition(.opacity)
+                    .zIndex(1)
+            }
         }
-        .tint(FinanceTheme.accent)
-        .toolbarBackground(FinanceTheme.background, for: .tabBar)
-        .toolbarBackground(.visible, for: .tabBar)
-        .sheet(isPresented: $showingAddTransaction) {
-            NavigationStack {
-                TransactionFormView(mode: .create)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation(.easeOut(duration: 0.35)) {
+                    showSplash = false
+                }
             }
         }
     }

@@ -1,10 +1,3 @@
-//
-//  FinanceHelperApp.swift
-//  FinanceHelper
-//
-//  Created by UTTAM KUMAR on 05/04/26.
-//
-
 import SwiftUI
 import SwiftData
 

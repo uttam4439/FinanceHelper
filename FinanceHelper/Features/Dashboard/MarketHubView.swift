@@ -1,10 +1,3 @@
-//
-//  MarketHubView.swift
-//  FinanceHelper
-//
-//  Created by Codex on 06/04/26.
-//
-
 import SwiftUI
 import SwiftData
 

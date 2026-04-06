@@ -1,10 +1,3 @@
-//
-//  InsightsView.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import Charts
 import SwiftData
 import SwiftUI
@@ -16,6 +9,8 @@ struct InsightsView: View {
     init() {}
 
     @State private var selectedMonth: String?
+    @State private var isLoading = false
+    @State private var loadError: String?
 
     private var snapshot: InsightsSnapshot {
         InsightsCalculator.makeSnapshot(transactions: transactions)
@@ -23,22 +18,30 @@ struct InsightsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                if transactions.isEmpty {
-                    EmptyStateView(
-                        title: "Insights need history",
-                        message: "Add a few transactions and this screen will highlight your spending patterns.",
-                        systemImage: "chart.bar.xaxis"
-                    )
-                    .padding(FinanceSpacing.large)
+            ZStack {
+                if let loadError {
+                    ErrorStateView(message: loadError, actionTitle: "Retry") { refreshData() }
+                } else if isLoading {
+                    LoadingStateView(message: "Loading insights…")
                 } else {
-                    VStack(alignment: .leading, spacing: FinanceSpacing.sectionGap) {
-                        metricCards
-                        monthlyTrendCard
-                        splitCard
+                    ScrollView {
+                        if transactions.isEmpty {
+                            EmptyStateView(
+                                title: "Insights need history",
+                                message: "Add a few transactions and this screen will highlight your spending patterns.",
+                                systemImage: "chart.bar.xaxis"
+                            )
+                            .padding(FinanceSpacing.large)
+                        } else {
+                            VStack(alignment: .leading, spacing: FinanceSpacing.sectionGap) {
+                                metricCards
+                                monthlyTrendCard
+                                splitCard
+                            }
+                            .padding(.horizontal, FinanceSpacing.screenHorizontal)
+                            .padding(.vertical, FinanceSpacing.screenVertical)
+                        }
                     }
-                    .padding(.horizontal, FinanceSpacing.screenHorizontal)
-                    .padding(.vertical, FinanceSpacing.screenVertical)
                 }
             }
             .background(FinanceTheme.background.ignoresSafeArea())
@@ -262,5 +265,11 @@ struct InsightsView: View {
 
     private var weeklyChangeTint: Color {
         snapshot.weekOverWeekDelta > 0 ? FinanceTheme.accent : FinanceTheme.success
+    }
+
+    private func refreshData() {
+        // Hook for future async data; currently instant local data.
+        loadError = nil
+        isLoading = false
     }
 }

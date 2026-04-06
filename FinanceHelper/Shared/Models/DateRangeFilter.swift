@@ -1,10 +1,3 @@
-//
-//  DateRangeFilter.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import Foundation
 
 enum DateRangeFilter: String, CaseIterable, Identifiable {

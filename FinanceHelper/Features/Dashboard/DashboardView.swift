@@ -1,10 +1,3 @@
-//
-//  DashboardView.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import Charts
 import SwiftData
 import SwiftUI
@@ -20,6 +13,8 @@ struct DashboardView: View {
 
     @State private var showingGoalSheet = false
     @State private var showingMarketSheet = false
+    @State private var isLoading = false
+    @State private var loadError: String?
 
     init(onAddTransaction: @escaping () -> Void) {
         self.onAddTransaction = onAddTransaction
@@ -38,18 +33,28 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: FinanceSpacing.sectionGap) {
-                    heroSection
-                    totalsStrip
-                    weeklyTrendSection
+            ZStack {
+                if let loadError {
+                    ErrorStateView(message: loadError, actionTitle: "Retry") {
+                        refreshData()
+                    }
+                } else if isLoading {
+                    LoadingStateView(message: "Loading dashboard…")
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: FinanceSpacing.sectionGap) {
+                            heroSection
+                            totalsStrip
+                            weeklyTrendSection
 
-                    savingsGoalSection
+                            savingsGoalSection
 
-                    recentTransactionsSection
+                            recentTransactionsSection
+                        }
+                        .padding(.horizontal, FinanceSpacing.screenHorizontal)
+                        .padding(.vertical, FinanceSpacing.screenVertical)
+                    }
                 }
-                .padding(.horizontal, FinanceSpacing.screenHorizontal)
-                .padding(.vertical, FinanceSpacing.screenVertical)
             }
             .background(FinanceTheme.background.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
@@ -306,6 +311,12 @@ struct DashboardView: View {
                 )
             )
         }
+    }
+
+    private func refreshData() {
+        // Hook for future async data; currently instant local data.
+        loadError = nil
+        isLoading = false
     }
 }
 

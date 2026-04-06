@@ -1,10 +1,3 @@
-//
-//  TransactionFormView.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import SwiftUI
 
 struct TransactionFormView: View {

@@ -1,10 +1,3 @@
-//
-//  TransactionCategory.swift
-//  FinanceHelper
-//
-//  Created by Codex on 05/04/26.
-//
-
 import SwiftUI
 
 enum TransactionCategory: String, Codable, CaseIterable, Identifiable {
