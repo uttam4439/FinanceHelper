@@ -81,7 +81,7 @@ struct TransactionsView: View {
             contentView
             .background(FinanceTheme.background.ignoresSafeArea())
             .navigationTitle("All Transactions")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.automatic)
             .searchable(text: $searchText, prompt: "Search notes or categories")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -173,32 +173,38 @@ struct TransactionsView: View {
     }
 
     private var emptyStateView: some View {
-        EmptyStateView(
-            title: transactions.isEmpty ? "No transactions yet" : "No matches found",
-            message: transactions.isEmpty
-                ? "Add your first transaction to start building your finance history."
-                : "Try changing your filters or search term.",
-            systemImage: "tray.fill",
-            actionTitle: transactions.isEmpty ? "Add Transaction" : "Show All Transactions",
-            action: transactions.isEmpty ? onAddTransaction : resetFiltersAndSearch
-        )
-        .padding(.horizontal, FinanceSpacing.screenHorizontal)
+        VStack {
+            FinanceSurface {
+                EmptyStateView(
+                    title: transactions.isEmpty ? "No transactions yet" : "No matches found",
+                    message: transactions.isEmpty
+                        ? "Add your first transaction to start building your finance history."
+                        : "Try changing your filters or search term.",
+                    systemImage: "tray.fill",
+                    actionTitle: transactions.isEmpty ? "Add Transaction" : "Show All Transactions",
+                    action: transactions.isEmpty ? onAddTransaction : resetFiltersAndSearch
+                )
+            }
+            .frame(maxWidth: 520)
+            .padding(.horizontal, FinanceSpacing.screenHorizontal)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 
     private var transactionsList: some View {
         List {
-            filterHeader
-                .listRowInsets(EdgeInsets(top: FinanceSpacing.regular, leading: FinanceSpacing.screenHorizontal, bottom: FinanceSpacing.regular, trailing: FinanceSpacing.screenHorizontal))
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-
-            ForEach(groupedTransactions, id: \.0) { day, dayTransactions in
-                transactionSection(for: day, transactions: dayTransactions)
+            Section {
+                ForEach(groupedTransactions, id: \.0) { day, dayTransactions in
+                    transactionSection(for: day, transactions: dayTransactions)
+                }
+            } header: {
+                filterHeader
+                    .padding(.vertical, FinanceSpacing.small)
             }
         }
         .listStyle(.insetGrouped)
-        .listSectionSpacing(.custom(FinanceSpacing.sectionGap))
         .scrollContentBackground(.hidden)
+        .background(FinanceTheme.background)
     }
 
     private func transactionSection(for day: Date, transactions dayTransactions: [TransactionRecord]) -> some View {
@@ -214,48 +220,39 @@ struct TransactionsView: View {
     }
 
     private func transactionRow(for transaction: TransactionRecord) -> some View {
-        FinanceSurface(padding: FinanceSpacing.regular) {
-            TransactionRowView(transaction: transaction)
-        }
-        .listRowInsets(EdgeInsets(top: FinanceSpacing.regular, leading: FinanceSpacing.screenHorizontal, bottom: FinanceSpacing.regular, trailing: FinanceSpacing.screenHorizontal))
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            transactionToEdit = transaction
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button("Delete", role: .destructive) {
-                transactionToDelete = transaction
-            }
+        TransactionRowView(transaction: transaction)
+            .contentShape(Rectangle())
+            .onTapGesture { transactionToEdit = transaction }
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                Button("Delete", role: .destructive) {
+                    transactionToDelete = transaction
+                }
 
-            Button("Edit") {
-                transactionToEdit = transaction
+                Button("Edit") {
+                    transactionToEdit = transaction
+                }
+                .tint(FinanceTheme.accent)
             }
-            .tint(FinanceTheme.accent)
-        }
     }
 
     private var spendingHeaderChart: some View {
-        FinanceSurface {
-            VStack(alignment: .leading, spacing: FinanceSpacing.rowGap) {
-                Text("April 1 - April 30")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(FinanceTheme.textSecondary)
+        VStack(alignment: .leading, spacing: FinanceSpacing.small) {
+            Text("April 1 - April 30")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(FinanceTheme.textSecondary)
 
-                HStack(spacing: 18) {
-                    CircleChartView(expenseTotal: expenseTotal, incomeTotal: incomeTotal)
-                        .frame(width: 138, height: 138)
+            HStack(spacing: FinanceSpacing.medium) {
+                CircleChartView(expenseTotal: expenseTotal, incomeTotal: incomeTotal)
+                    .frame(width: 132, height: 132)
 
-                    VStack(alignment: .leading, spacing: FinanceSpacing.small) {
-                        metricLegend(title: "Expenses", value: expenseTotal, color: FinanceTheme.accent)
-                        metricLegend(title: "Income", value: incomeTotal, color: FinanceTheme.success)
+                VStack(alignment: .leading, spacing: FinanceSpacing.xSmall) {
+                    metricLegend(title: "Expenses", value: expenseTotal, color: FinanceTheme.accent)
+                    metricLegend(title: "Income", value: incomeTotal, color: FinanceTheme.success)
 
-                        if let topCategory = topExpenseCategory {
-                            Text("Top: \(topCategory.key.title)")
-                                .font(.caption)
-                                .foregroundStyle(FinanceTheme.textSecondary)
-                        }
+                    if let topCategory = topExpenseCategory {
+                        Text("Top: \(topCategory.key.title)")
+                            .font(.caption)
+                            .foregroundStyle(FinanceTheme.textSecondary)
                     }
                 }
             }

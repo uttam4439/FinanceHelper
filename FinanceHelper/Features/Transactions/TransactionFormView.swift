@@ -40,7 +40,10 @@ struct TransactionFormView: View {
     }
 
     private var categoryOptions: [TransactionCategory] {
-        let options = TransactionCategory.options(for: draft.kind)
+        var options = TransactionCategory.options(for: draft.kind)
+        if !options.contains(draft.category) {
+            options.insert(draft.category, at: 0)
+        }
         return options.isEmpty ? [.other] : options
     }
 
@@ -49,65 +52,19 @@ struct TransactionFormView: View {
     }
 
     var body: some View {
-        Form {
-            Section("Amount") {
-                TextField("0.00", text: $draft.amountText)
-                    .keyboardType(.decimalPad)
-
-                if let amountMessage = validation.amountMessage {
-                    Text(amountMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                }
+        ScrollView {
+            VStack(spacing: FinanceSpacing.sectionGap) {
+                headerButtons
+                formCard
             }
-
-            Section("Details") {
-                Picker("Type", selection: $draft.kind) {
-                    ForEach(TransactionKind.allCases) { kind in
-                        Text(kind.title).tag(kind)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .onChange(of: draft.kind) { _, newKind in
-                    if !draft.category.supportedKinds.contains(newKind) {
-                        draft.category = TransactionCategory.options(for: newKind).first ?? .other
-                    }
-                }
-
-                Picker("Category", selection: $draft.category) {
-                    ForEach(categoryOptions) { category in
-                        Label(category.title, systemImage: category.symbol).tag(category)
-                    }
-                }
-
-                DatePicker("Date", selection: $draft.date, displayedComponents: .date)
-
-                TextField("Notes", text: $draft.note, axis: .vertical)
-                    .lineLimit(2...4)
-            }
+            .padding(.horizontal, FinanceSpacing.screenHorizontal)
+            .padding(.vertical, FinanceSpacing.screenVertical)
         }
-        .navigationTitle(mode.title)
+        .background(FinanceTheme.background.ignoresSafeArea())
+        .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                    dismiss()
-                }
-            }
-
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
-                    save()
-                }
-                .disabled(!canSave)
-            }
-        }
-        .onAppear {
-            validation = TransactionFormValidator.validate(draft)
-        }
-        .onChange(of: draft) { _, newValue in
-            validation = TransactionFormValidator.validate(newValue)
-        }
+        .onAppear { validation = TransactionFormValidator.validate(draft) }
+        .onChange(of: draft) { _, newValue in validation = TransactionFormValidator.validate(newValue) }
     }
 
     private func save() {
@@ -124,5 +81,107 @@ struct TransactionFormView: View {
         }
 
         dismiss()
+    }
+
+    private var headerButtons: some View {
+        HStack {
+            Button("Cancel") { dismiss() }
+                .buttonStyle(FinancePillButtonStyle(filled: false))
+
+            Spacer()
+
+            Text(mode.title)
+                .font(.headline.weight(.semibold))
+                .foregroundStyle(FinanceTheme.textPrimary)
+
+            Spacer()
+
+            Button("Save") { save() }
+                .buttonStyle(FinancePillButtonStyle())
+                .disabled(!canSave)
+                .opacity(canSave ? 1 : 0.5)
+        }
+    }
+
+    private var formCard: some View {
+        FinanceSurface {
+            VStack(alignment: .leading, spacing: FinanceSpacing.sectionGap) {
+                VStack(alignment: .leading, spacing: FinanceSpacing.small) {
+                    Text("Amount")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(FinanceTheme.textSecondary)
+
+                    TextField("0.00", text: $draft.amountText)
+                        .keyboardType(.decimalPad)
+                        .padding(.vertical, FinanceSpacing.xSmall)
+                        .padding(.horizontal, FinanceSpacing.regular)
+                        .background(
+                            RoundedRectangle(cornerRadius: FinanceRadius.medium, style: .continuous)
+                                .fill(FinanceTheme.secondaryCard)
+                        )
+
+                    if let amountMessage = validation.amountMessage {
+                        Text(amountMessage)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: FinanceSpacing.regular) {
+                    Text("Details")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(FinanceTheme.textSecondary)
+
+                    Picker("Type", selection: $draft.kind) {
+                        ForEach(TransactionKind.allCases) { kind in
+                            Text(kind.title).tag(kind)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: draft.kind) { _, newKind in
+                        if !draft.category.supportedKinds.contains(newKind) {
+                            draft.category = TransactionCategory.options(for: newKind).first ?? .other
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: FinanceSpacing.xSmall) {
+                        Text("Category")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(FinanceTheme.textSecondary)
+
+                        Picker("", selection: $draft.category) {
+                            ForEach(categoryOptions) { category in
+                                Label(category.title, systemImage: category.symbol).tag(category)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                    }
+
+                    VStack(alignment: .leading, spacing: FinanceSpacing.xSmall) {
+                        Text("Date")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(FinanceTheme.textSecondary)
+                        DatePicker("", selection: $draft.date, displayedComponents: .date)
+                            .datePickerStyle(.compact)
+                            .labelsHidden()
+                    }
+
+                    VStack(alignment: .leading, spacing: FinanceSpacing.xSmall) {
+                        Text("Notes")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(FinanceTheme.textSecondary)
+                        TextField("Optional notes", text: $draft.note, axis: .vertical)
+                            .lineLimit(2...4)
+                            .padding(.horizontal, FinanceSpacing.regular)
+                            .padding(.vertical, FinanceSpacing.xSmall)
+                            .background(
+                                RoundedRectangle(cornerRadius: FinanceRadius.medium, style: .continuous)
+                                    .fill(FinanceTheme.secondaryCard)
+                            )
+                    }
+                }
+            }
+        }
     }
 }

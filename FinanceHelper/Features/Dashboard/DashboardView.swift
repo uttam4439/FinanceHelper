@@ -19,6 +19,7 @@ struct DashboardView: View {
     let onAddTransaction: () -> Void
 
     @State private var showingGoalSheet = false
+    @State private var showingMarketSheet = false
 
     init(onAddTransaction: @escaping () -> Void) {
         self.onAddTransaction = onAddTransaction
@@ -54,9 +55,14 @@ struct DashboardView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Label("MoneyPal", systemImage: "dollarsign.circle.fill")
-                        .font(.headline.weight(.bold))
-                        .foregroundStyle(FinanceTheme.textPrimary)
+                    Button {
+                        showingMarketSheet = true
+                    } label: {
+                        Label("Markets", systemImage: "dollarsign.circle.fill")
+                            .font(.headline.weight(.bold))
+                            .foregroundStyle(FinanceTheme.accent)
+                    }
+                    .accessibilityLabel("Open market and investing tools")
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -70,6 +76,12 @@ struct DashboardView: View {
                 NavigationStack {
                     SavingsGoalEditorView(goal: currentGoal)
                 }
+            }
+            .sheet(isPresented: $showingMarketSheet) {
+                NavigationStack {
+                    MarketHubView()
+                }
+                .presentationDetents([.medium, .large])
             }
         }
     }
@@ -153,7 +165,7 @@ struct DashboardView: View {
                         x: .value("Day", item.label),
                         y: .value("Amount", item.amount)
                     )
-                    .foregroundStyle(item.isAccent ? FinanceTheme.accent : FinanceTheme.accent.opacity(0.45))
+                    .foregroundStyle(barStyle(for: item))
                     .clipShape(RoundedRectangle(cornerRadius: FinanceSpacing.xSmall, style: .continuous))
                 }
                 .chartYAxis(.hidden)
@@ -266,6 +278,32 @@ struct DashboardView: View {
                 label: formatter.string(from: date),
                 amount: total,
                 isAccent: offset == 0
+            )
+        }
+    }
+
+    private func barStyle(for item: WeeklyAmount) -> AnyShapeStyle {
+        if item.isAccent {
+            return AnyShapeStyle(
+                LinearGradient(
+                    colors: [
+                        FinanceTheme.accent,
+                        FinanceTheme.accent.opacity(0.85)
+                    ],
+                    startPoint: .bottom,
+                    endPoint: .top
+                )
+            )
+        } else {
+            return AnyShapeStyle(
+                LinearGradient(
+                    colors: [
+                        FinanceTheme.accentSoft.opacity(0.95),
+                        FinanceTheme.accent.opacity(0.7)
+                    ],
+                    startPoint: .bottom,
+                    endPoint: .top
+                )
             )
         }
     }
